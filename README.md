@@ -8,6 +8,4 @@
 
 * Jobs were assessed on several skills
 
-| python | r | spark | spss | sql | pandas | numpy |
-| cloud | docker | statistic | java | scala | marketing |
-| sas | stata | excel | tableau |
+python, r, spark, spss, sql, pandas, numpy, cloud, docker, statistic, java, scala, marketing, sas, stata, excel, tableau
