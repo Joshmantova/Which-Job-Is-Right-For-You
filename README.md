@@ -16,4 +16,5 @@ python, r, spark, spss, sql, pandas, numpy, cloud, docker, statistic, java, scal
 * User vectors were created by asking users which of the skills they had experience with
 
 * User vector was compared to all job vectors using Jaccard Similarity
+![](imgs/Jaccard_Index.png)
     * Most similar job was returned
