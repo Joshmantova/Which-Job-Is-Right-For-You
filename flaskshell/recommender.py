@@ -40,8 +40,11 @@ class Recommender:
             js = jaccard_score(list(descrip), self.datapoint)
             js_list.append(js)
         order = np.argsort(js_list)[::-1]
+        recs = []
         for o in order[:5]:
-            print(self.df['Job_Title'].iloc[o])
+            recs.append(self.df['Job_Title'].iloc[o])
+        return recs
+            # print(self.df['Job_Title'].iloc[o])
         # print(f'Least recommended jobs: ')
         # for o in order[:-5:-1]:
         #     print(self.df['Job_Title'].iloc[o])
