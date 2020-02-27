@@ -3,22 +3,20 @@ from recommender import Recommender
 app = Flask(__name__)
 
 def urlify(string):
-        str_list = string.split()
-        search_keywords = '%20'.join(str_list)
-        url = f'https://www.linkedin.com/jobs/search?keywords={search_keywords}&location=&trk=guest_job_search_jobs-search-bar_search-submit&redirect=false&position=1&pageNum=0'
-        return url
-
-def show_descrip(descrip):
-    return f"""
-            <h2> {descrip} </h2>
-            """
+    '''Takes string of Linkedin search query and returns url for that query'''
+    str_list = string.split()
+    search_keywords = '%20'.join(str_list)
+    url = f'https://www.linkedin.com/jobs/search?keywords={search_keywords}&location=&trk=guest_job_search_jobs-search-bar_search-submit&redirect=false&position=1&pageNum=0'
+    return url
 
 @app.route('/')
 def landing_page():
+    '''Asks user for their profile of skills'''
     return render_template('index.html')
 
 @app.route('/recommender', methods=['POST'])
 def recommender():
+    '''Creates user profile and recommends job'''
     skill1 = request.form.get('skill1') != None
     skill2 = request.form.get('skill2') != None
     skill3 = request.form.get('skill3') != None
