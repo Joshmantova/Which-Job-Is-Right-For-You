@@ -2,6 +2,17 @@ from flask import Flask, render_template, request
 from recommender import Recommender
 app = Flask(__name__)
 
+def urlify(string):
+        str_list = string.split()
+        search_keywords = '%20'.join(str_list)
+        url = f'https://www.linkedin.com/jobs/search?keywords={search_keywords}&location=&trk=guest_job_search_jobs-search-bar_search-submit&redirect=false&position=1&pageNum=0'
+        return url
+
+def show_descrip(descrip):
+    return f"""
+            <h2> {descrip} </h2>
+            """
+
 @app.route('/')
 def landing_page():
     return render_template('index.html')
@@ -30,7 +41,16 @@ def recommender():
                 skill12, skill13, skill14, skill15, skill16, skill17]
     r = Recommender(user_vector)
     recs = r.recommend()
-    return f''' <h2>Recommended job titles: {recs}</h2>'''
+    descrip = r.rec_descrip
+    str_recs = ' '.join(recs)
+    return f''' <h2>Recommended job title: {str(recs[0])} <br>
+                Company: {str(recs[1])}<br>
+                Location: {str(recs[2])}<br>
+                Job Description: {descrip}</h2>
+                <br><br>
+                <a href='{urlify(str_recs)}'> Go to Linkedin job posting</a>
+                <br><br>
+            '''
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, threaded=True, debug=True,)

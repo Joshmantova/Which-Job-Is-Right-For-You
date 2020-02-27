@@ -41,13 +41,29 @@ class Recommender:
             js_list.append(js)
         order = np.argsort(js_list)[::-1]
         recs = []
-        for o in order[:5]:
-            recs.append(self.df['Job_Title'].iloc[o])
-        return recs
+        o = order[:1]
+        rec = (self.df['Job_Title'].iloc[o].values[0], self.df['Company'].iloc[o].values[0], self.df['Location'].iloc[o].values[0])
+        rec_descrip = self.df['Description'].iloc[o].values[0]
+        self.rec_descrip = rec_descrip
+        self.rec = rec
+        return rec
+        # for o in order[:1]:
+        #     recs.append(self.df['Job_Title'].iloc[o])
+        # return recs
             # print(self.df['Job_Title'].iloc[o])
         # print(f'Least recommended jobs: ')
         # for o in order[:-5:-1]:
         #     print(self.df['Job_Title'].iloc[o])
+    
+    def urlify(string):
+        str_list = string.split()
+        search_keywords = '%20'.join(str_list)
+        url = f'https://www.linkedin.com/jobs/search?keywords={search_keywords}&location=&trk=guest_job_search_jobs-search-bar_search-submit&redirect=false&position=1&pageNum=0'
+        return url
+        
+    def get(self):
+        driver = webdriver.Chrome()
+        driver.get(urlify(self.rec))
 
 if __name__ == '__main__':
     '''['python', 'r', 'spark', 'spss', 'sql', 'pandas', 'numpy',
@@ -55,4 +71,5 @@ if __name__ == '__main__':
                         'sas', 'stata', 'excel', 'tableau']'''
     example_datapoint = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0]
     recommender = Recommender(example_datapoint)
-    recommender.recommend()
+    rec = recommender.recommend()
+    print(recommender.rec_descrip)
