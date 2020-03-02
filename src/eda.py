@@ -78,7 +78,8 @@ if __name__ == '__main__':
     ax.set_xlabel('Frequencies')
     ax.set_title('Top 10 Words and Their Frequencies')
     plt.tight_layout()
-    plt.savefig('../imgs/top_10_words_and_frequencies.png')
+    plt.show()
+    # plt.savefig('../imgs/top_10_words_and_frequencies.png')
 
     # Word cloud with only punctuation removed.
     no_punct_descriptions = remove_punctuation(descriptions)
@@ -90,7 +91,8 @@ if __name__ == '__main__':
     ax.imshow(wordcloud)
     plt.axis('off')
     plt.tight_layout()
-    plt.savefig('../imgs/wordcloud_only_punct_removed.png')
+    plt.show()
+    # plt.savefig('../imgs/wordcloud_only_punct_removed.png')
 
     # Word cloud with cleaned descriptions
     flat_cleaned_descriptions = flatten_descriptions(cleaned_descriptions)
@@ -101,7 +103,8 @@ if __name__ == '__main__':
     ax.imshow(wordcloud_cleaned)
     plt.axis('off')
     plt.tight_layout()
-    plt.savefig('../imgs/wordcloud_cleaned_descriptions.png')
+    plt.show()
+    # plt.savefig('../imgs/wordcloud_cleaned_descriptions.png')
 
     # Visualizing the data with PCA
     tfidf_vectorizer = TfidfVectorizer(stop_words=stopWords_full, max_features=50000)
@@ -120,4 +123,5 @@ if __name__ == '__main__':
     ax.set_xlabel("1st eigenvector (PC1)")
     ax.set_ylabel("2nd eigenvector (PC2)")
     plt.tight_layout()
-    plt.savefig('../imgs/first_two_pca_dimensions.png')
+    plt.show()
+    # plt.savefig('../imgs/first_two_pca_dimensions.png')
