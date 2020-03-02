@@ -1,27 +1,16 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import silhouette_score
+from sklearn.metrics import euclidean_distances
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
-from sklearn.decomposition import LatentDirichletAllocation
-from wordcloud import WordCloud
 import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.corpus import wordnet
-import gensim
-from gensim.utils import simple_preprocess
-from gensim.parsing.preprocessing import STOPWORDS
-import gensim.corpora as corpora
-from gensim.models import CoherenceModel
-from nltk.stem import SnowballStemmer
-
-import pyLDAvis
-import pyLDAvis.gensim
 
 def remove_stopwords(stopWords, descriptions):
     cleaned_descriptions = []
@@ -64,39 +53,22 @@ def clean_descriptions(stopWords, descriptions):
     cleaned = lemmatize_descriptions(no_punct_sw)
     return cleaned
 
-def get_representative_words(vectorizer, kmeans):
-    sorted_centroids = []
-    for cluster in kmeans.cluster_centers_:
-        top_10 = np.argsort(cluster)[::-1]
-        sorted_centroids.append(top_10[:10])
-    for idx, c in enumerate(sorted_centroids):
-        print(f'\nCluster {idx}\n')
-        for idx in c:
-            print(vectorizer.get_feature_names()[idx])
-
-def display_topics(model, feature_names, num_top_words):
-    for topic_idx, topic in enumerate(model.components_):
-        print('Topic %d:' % (topic_idx))
-        print(' '.join([feature_names[i] for i in topic.argsort()[:-num_top_words - 1:-1]]))
-
-def lemmatize_stemming(text):
-    return stemmer.stem(WordNetLemmatizer().lemmatize(text, get_wordnet_pos(text)))
-
-def preprocess(text):
-    result = []
-    for token in gensim.utils.simple_preprocess(text):
-        if token not in stopWords and len(token) > 3:
-            result.append(lemmatize_stemming(token))
-    return result
+def get_representative_jobs(df, kmeans):
+    cluster_centers = kmeans.cluster_centers_
+    for cent in cluster_centers:
+        print('\nCluster Represnetations')
+        dist = euclidean_distances(cent.reshape(1,-1), tfidf)
+        order = np.argsort(dist)
+        for o in order[0][:5]:
+            title = df['Job_Title'].iloc[o]
+            print(title)
 
 if __name__ == '__main__':
 
     # Reading in data
     df = pd.read_csv('../Datasets/df_all_linkedin.csv', index_col=0)
-    df_co = pd.read_csv('../Datasets/df_linkedin_Colorado.csv', index_col=0)
 
     descriptions = df['Description'].values
-    descriptions_co = df_co['Description'].values
 
     # Creating stop words
     stopWords = set(stopwords.words('english'))
@@ -119,58 +91,60 @@ if __name__ == '__main__':
     # Cleaning descriptions for both the whole dataset and CO only
     cleaned_descriptions = clean_descriptions(stopWords, descriptions)
 
-    # descriptions_no_sw_co = remove_stopwords(stopWords, descriptions_co)
-    # descriptions_no_sw_punct_co = remove_punctuation(tokenize_remove_punct, descriptions_no_sw_co)
-    # cleaned_descriptions_co = lemmatize_descriptions(lemma, descriptions_no_sw_punct_co)
-
     # Vectorizing words creating both tf and tf-idf matrices
-    vectorizer = CountVectorizer(stop_words=stopWords, min_df=.15, max_df=0.75, max_features=5000)
     tfidf_vectorizer = TfidfVectorizer(stop_words=stopWords, min_df=.15, max_df=0.75, max_features=5000)
     tfidf = tfidf_vectorizer.fit_transform(cleaned_descriptions).toarray()
-    tf = vectorizer.fit_transform(cleaned_descriptions)
 
     # Initializing and fitting k-means model
-    kmeans = KMeans(n_clusters=5, verbose=True, n_jobs=-1)
+    kmeans = KMeans(n_clusters=3, n_jobs=-1)
     kmeans.fit(tfidf)
 
     # Returning most representative words for each cluster
-    get_representative_words(tfidf_vectorizer, kmeans)
+    get_representative_jobs(df, kmeans)
 
     # Calculating model score for kmeans
     silhouette_score(tfidf, kmeans.labels_)
     kmeans.score(tfidf)
 
-    # Initializing and running LDA model
-    feature_names = vectorizer.get_feature_names()
+    # Creating elbow plot for selecting k value. Takes forever to run so it's commented out
 
-    lda = LatentDirichletAllocation(n_components=4, 
-                                    max_iter=10, learning_method='online', 
-                                    random_state=0, verbose=True, n_jobs=-1)
+    # k_values = [i for i in range(2, 1000)]
+    # ss_scores = []
+    # for k in k_values:
+    #     kmeans = KMeans(n_clusters=k, n_jobs=-1, random_state=0)
+    #     kmeans.fit(tfidf)
+    #     ss = silhouette_score(tfidf, kmeans.labels_)
+    #     ss_scores.append(ss)
+    
+    # fig, ax = plt.subplots()
+    # ax.plot(k_values, ss_scores)
+    # ax.set_xlabel('K Values')
+    # ax.set_ylabel('Silhouette Score')
+    # ax.set_title('Selection of K-Value')
+    # plt.tight_layout()
+    # plt.savefig('../imgs/selection_kvalue.png')
+    
+    #Visualizing k-means clusters with PCA graph
+    kmeans_model = kmeans
+    labels=kmeans_model.labels_.tolist()
 
-    lda.fit(tf)
+    pca = PCA(n_components=2).fit(tfidf)
+    datapoint = pca.transform(tfidf)
 
-    # Displaying most representative words for each cluster of LDA
-    num_top_words=10
-    display_topics(lda, feature_names, num_top_words)
+    plt.figure
 
-    # LDA in gensim
-    # Processing text with gensim
-    data_text = df[['Description']].copy()
-    data_text['index'] = data_text.index
-    documents = data_text
-
-    stemmer = SnowballStemmer('english')
-    processed_docs = documents['Description'].map(preprocess)
-
-    # Vectorizing text in gensim
-    id2word = gensim.corpora.Dictionary(processed_docs)
-    id2word.filter_extremes(no_below=80, no_above=.75, keep_n=5000)
-    texts = processed_docs
-    bow_corpus = [id2word.doc2bow(text) for text in texts]
-
-    # LDA model
-    lda_model = gensim.models.LdaMulticore(bow_corpus, num_topics=3, id2word=id2word, passes=10, random_state=0)
-
-    # Visualizing LDA with PyLDAvis
-    vis = pyLDAvis.gensim.prepare(lda_model, bow_corpus, id2word)
-    pyLDAvis.show(vis)
+    label1 = ["#FFFF00", "#008000", "#0000FF"]
+    color = [label1[i] for i in labels]
+    plt.scatter(datapoint[:, 0], datapoint[:, 1], c=color)
+    centroids = kmeans_model.cluster_centers_
+    centroidpoint = pca.transform(centroids)
+    plt.scatter(centroidpoint[:,0], centroidpoint[:,1], marker='^', s=150, c="#000000", label='Cluster Centers')
+    plt.xlabel('First PCA Dimension')
+    plt.ylabel('Second PCA Dimension')
+    plt.title('K-Means Clusters')
+    plt.legend(fontsize='x-small')
+    plt.text(0.44,0.6, 'Blue: Mobile devs', fontsize=9)
+    plt.text(0.44, 0.5, 'Yellow: Data science', fontsize=9)
+    plt.text(0.44, 0.4, 'Green: Big data dev', fontsize=9)
+    plt.tight_layout()
+    plt.savefig('../imgs/pca_kmeans_3_clusters.png');
