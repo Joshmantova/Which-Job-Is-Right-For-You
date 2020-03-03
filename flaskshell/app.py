@@ -41,14 +41,18 @@ def recommender():
     recs = r.recommend()
     descrip = r.rec_descrip
     str_recs = ' '.join(recs)
-    return f''' <h2>Recommended job title: {str(recs[0])} <br>
-                Company: {str(recs[1])}<br>
-                Location: {str(recs[2])}<br>
-                Job Description: {descrip}</h2>
+    return f''' <h4>Recommended job title: {recs[0]} <br><br>
+                Company: {recs[1]}<br><br>
+                Location: {recs[2]}<br><br>
+                Job Description: {descrip}</h4>
                 <br><br>
                 <a href='{urlify(str_recs)}'> Go to Linkedin job posting</a>
                 <br><br>
             '''
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, threaded=True, debug=True,)
