@@ -1,19 +1,6 @@
-from flask import Flask, render_template, request
-from recommender import Recommender
-app = Flask(__name__)
+{% extends 'base.html' %}
 
-def urlify(string):
-    '''Takes string of Linkedin search query and returns url for that query'''
-    str_list = string.split()
-    search_keywords = '%20'.join(str_list)
-    url = f'https://www.linkedin.com/jobs/search?keywords={search_keywords}&location=&trk=guest_job_search_jobs-search-bar_search-submit&redirect=false&position=1&pageNum=0'
-    return url
-
-@app.route('/')
-def landing_page():
-    '''Asks user for their profile of skills'''
-    return render_template('index.html')
-
+{% block content %}
 @app.route('/recommender', methods=['POST'])
 def recommender():
     '''Creates user profile and recommends job'''
@@ -41,8 +28,7 @@ def recommender():
     recs = r.recommend()
     descrip = r.rec_descrip
     str_recs = ' '.join(recs)
-    return f''' 
-                <h4>Recommended job title: {recs[0]} <br><br>
+    return f''' <h4>Recommended job title: {recs[0]} <br><br>
                 Company: {recs[1]}<br><br>
                 Location: {recs[2]}<br><br>
                 Job Description: {descrip}</h4>
@@ -51,9 +37,4 @@ def recommender():
                 <br><br>
             '''
 
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, threaded=True, debug=True,)
+{% endblock content %}
