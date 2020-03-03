@@ -41,7 +41,7 @@ def recommender():
     recs = r.recommend()
     descrip = r.rec_descrip
     str_recs = ' '.join(recs)
-    return f''' 
+    return render_template('base.html') + f''' 
                 <h4>Recommended job title: {recs[0]} <br><br>
                 Company: {recs[1]}<br><br>
                 Location: {recs[2]}<br><br>
