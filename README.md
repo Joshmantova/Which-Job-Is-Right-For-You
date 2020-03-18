@@ -84,6 +84,28 @@ In order to scrape Linkedin, the script first would navigate to the search resul
 
 ![](imgs/html_example.png)
 
+# EDA and Clustering
+
+Companies with the largest number of postings for data science jobs on Linkedin.com
+
+![](imgs/num_job_postings.png)
+
+* Using a TFIDF matrix, job descriptions were vectorized and fed into a K-Means algorithm to attempt to group jobs together based on descriptions alone
+
+* Wanted to group jobs together and recommend using clusters, but selecting the K value using the Silhouette Score elbow plot method was difficult
+  * For any interpretable number of K values, the SS score was extremely low
+
+![](imgs/selection_kvalue.png)
+
+* Using three clusters, we can see a very diverse group of jobs
+  * Although the each observation - and cluster center for that matter - is located within 10,000 dimensional space, the clusters were visualized by transforming the data into two dimensional space using PCA
+
+![](imgs/pca_kmeans_3_clusters.png)
+
+* Once again, all of these jobs were found by searching for the keyword 'Data Science'
+ * Interesting that mobile developer jobs were included
+ * In two dimensional euclidean space, we can see that the descriptions of the mobile dev jobs were quite different than the data science and big data job descriptions
+
 # Vectorizing jobs
 
 * Jobs were assessed on several skills
@@ -95,8 +117,31 @@ python, r, spark, spss, sql, pandas, numpy, cloud, docker, statistic, java, scal
 
 * User vectors were created by asking users which of the skills they had experience with
 
+![](imgs/Jaccard_Index.png)
+
 * User vector was compared to all job vectors using Jaccard Similarity
     * Most similar job was returned
 
-![](imgs/Jaccard_Index.png)
+![](imgs/recommender_flow_chart.png)
+
+### Example recommendations:
+* Docker, Cloud skills only --> Senior Manager of Technology
+* Python, R only --> Director - Data Science, Modeling
+* Python, Marketing only --> Marketing Data Scientist
+
+
+# Flask App
+
+* Recommender was deployed on a Flask website
+
+![](imgs/recommender_app.png)
+
+# Future Directions
+* Include jobs outside of adata science
+* Explore other text embedding methods
+  * Retain semantic representations of descriptions (e.g. word-to-vec or BERT)
+* Allow user to request location from recommender
+* Develop strategy to isolate 'important' parts of descriptions
+  * Most descriptions include fluffy details about company
+* Develop more exhaustive list of skills
 
