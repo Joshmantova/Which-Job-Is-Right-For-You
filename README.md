@@ -134,6 +134,8 @@ python, r, spark, spss, sql, pandas, numpy, cloud, docker, statistic, java, scal
 
 * Recommender was deployed on a Flask website
 
+URL: http://35.161.31.22/
+
 ![](imgs/recommender_app.png)
 
 # Future Directions
