@@ -14,7 +14,7 @@ class Recommender:
                         'cloud', 'docker', 'statistic', 'java', 'scala', 'marketing',
                         'sas', 'stata', 'excel', 'tableau']
         self.empty_skills_dict = self.set_dictionary()
-        self.df = pd.read_csv('../Datasets/df_all_linkedin.csv')
+        self.df = pd.read_csv('df_all_linkedin.csv')
         self.descriptions = self.df['Description'].values
         self.vectorized_descriptions = self.vectorize_descriptions()
     
