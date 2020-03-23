@@ -133,13 +133,14 @@ python, r, spark, spss, sql, pandas, numpy, cloud, docker, statistic, java, scal
 # Flask App
 
 * Recommender was deployed on a Flask website
+* Hosted on Amazon AWS EC2 instance
 
 URL: http://35.161.31.22/
 
 ![](imgs/recommender_app.png)
 
 # Future Directions
-* Include jobs outside of adata science
+* Include jobs outside of data science
 * Explore other text embedding methods
   * Retain semantic representations of descriptions (e.g. word-to-vec or BERT)
 * Allow user to request location from recommender
