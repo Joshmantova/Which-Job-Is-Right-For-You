@@ -135,7 +135,7 @@ python, r, spark, spss, sql, pandas, numpy, cloud, docker, statistic, java, scal
 * Recommender was deployed on a Flask website
 * Hosted on Amazon AWS EC2 instance
 
-URL: http://44.233.131.129/
+URL: http://34.215.60.18
 
 ![](imgs/recommender_app.png)
 
