@@ -4,6 +4,8 @@
 
 * Goal of project is to match people up with jobs
 
+* Deploy project using a live interactive webapp for prospective job seekers to use
+
 * Jobs were scraped from Linkedin using Selenium and Beautiful Soup
 
 # The Data:
@@ -121,6 +123,7 @@ python, r, spark, spss, sql, pandas, numpy, cloud, docker, statistic, java, scal
 
 * User vector was compared to all job vectors using Jaccard Similarity
     * Most similar job was returned
+    * If multiple jobs were equally similar, the first job in the list was returned
 
 ![](imgs/recommender_flow_chart.png)
 
@@ -130,14 +133,19 @@ python, r, spark, spss, sql, pandas, numpy, cloud, docker, statistic, java, scal
 * Python, Marketing only --> Marketing Data Scientist
 
 
-# Flask App
+# Streamlit WebApp
 
-* Recommender was deployed on a Flask website
+* Recommender was deployed on a streamlit app with the help of Docker
 * Hosted on Amazon AWS EC2 instance
 
-URL: http://34.215.60.18
+Here is the homepage of the app:
+![](imgs/Streamlit_Homepage.png)
 
-![](imgs/recommender_app.png)
+Users would then select the Data Science skills they have like in this example
+![](imgs/Streamlit_Recommendation_Example_1.png)
+
+Once the user completed their selections, they would click the recommendation button to get a job
+![](imgs/Streamlit_Recommendation_Example_2.png)
 
 # Future Directions
 * Include jobs outside of data science
