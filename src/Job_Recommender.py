@@ -12,6 +12,14 @@ def urlify(string):
     return url
 
 if __name__ == '__main__':
+    st.title('How it works')
+    instructions = """
+    Below, you will see several checkboxes that correspond to different Data Science related skills.
+    Please select the skills that you feel comfortable with and based on which skills you have and don't have,
+    a job will be recommended to you. This recommendation process utilizes both the skills you have and the skills
+    you don't have. Happy job searching!
+    """
+    st.write(instructions)
     list_of_skills = [
         "Python", "R", "Spark", "SPSS", "SQL", "Pandas", "Numpy", "Cloud", "Docker",
         "Statistic", "Java", "Scala", "Marketing", "SAS", "Stata", "Excel", "Tableau"
