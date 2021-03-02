@@ -1,8 +1,4 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-from sklearn.metrics import jaccard_score
-
 from recommender import Recommender
 
 def urlify(string):
@@ -35,6 +31,7 @@ if __name__ == '__main__':
         recs = r.recommend()
         descrip = r.rec_descrip
         str_recs = ' '.join(recs)
+        st.title("Here's a job that matches your skillset")
         st.write(f"Recommended job title: {recs[0]}")
         st.write(f"Company: {recs[1]}")
         st.write(f"Location: {recs[2]}")

@@ -9,4 +9,4 @@ RUN pip --no-cache-dir install -r ../requirements.txt
 EXPOSE 8501
 
 ENTRYPOINT [ "streamlit", "run" ]
-CMD [ "Job_Recommender.py" ]
+CMD [ "Job Recommender.py" ]
